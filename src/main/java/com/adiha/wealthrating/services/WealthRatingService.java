@@ -20,16 +20,25 @@ import java.util.Map;
 import static com.adiha.wealthrating.utils.Constants.ASSET_EVALUATION_API;
 import static com.adiha.wealthrating.utils.Constants.WEALTH_THRESHOLD_API;
 
+/**
+ * Service class for evaluating and managing wealth ratings of people.
+ */
 @Service
 @RequiredArgsConstructor
 public class WealthRatingService {
+
     private final Logger logger = LoggerFactory.getLogger(WealthRatingService.class);
 
     private final RichRepository richRepository;
     private final RestTemplate restTemplate;
 
+    /**
+     * Evaluates the fortune of a person based on their financial information and city.
+     *
+     * @param person The person to evaluate.
+     * @return The wealth status of the person (RICH or NOT_RICH).
+     */
     public RichState evaluateRichStatus(Person person) {
-
         BigDecimal singleAssetEvaluationByCity = getEvaluationByCity(person.getPersonalInfo().getCity());
         BigDecimal wealthThreshold = getWealthThreshold();
 
@@ -37,16 +46,31 @@ public class WealthRatingService {
 
         if (personFortune.compareTo(wealthThreshold) >= 0) {
             savePersonToDB(person, personFortune);
-
             logger.info("{} was found rich and saved to DB", person.getPersonalInfo().getFullName());
-
             return RichState.RICH;
         }
 
         logger.info("{} was found not rich", person.getPersonalInfo().getFullName());
-
         return RichState.NOT_RICH;
+    }
 
+    /**
+     * Retrieves a list of all rich people.
+     *
+     * @return List of PersonEntity representing rich people.
+     */
+    public List<PersonEntity> getAllRich() {
+        return richRepository.findAll();
+    }
+
+    /**
+     * Retrieves information about a rich person by their unique identifier.
+     *
+     * @param id The unique identifier of the rich person.
+     * @return PersonEntity representing the rich person, or null if not found.
+     */
+    public PersonEntity getRichById(long id) {
+        return richRepository.findById(id).orElse(null);
     }
 
     private void savePersonToDB(Person person, BigDecimal personFortune) {
@@ -65,16 +89,6 @@ public class WealthRatingService {
 
     private BigDecimal getWealthThreshold() {
         ResponseEntity<BigDecimal> responseEntity = restTemplate.getForEntity(WEALTH_THRESHOLD_API, BigDecimal.class);
-
         return responseEntity.getBody();
-    }
-
-    public List<PersonEntity> getAllRich() {
-        return richRepository.findAll();
-    }
-
-    public PersonEntity getRichById(long id) {
-        return richRepository.findById(id)
-                .orElse(null);
     }
 }
