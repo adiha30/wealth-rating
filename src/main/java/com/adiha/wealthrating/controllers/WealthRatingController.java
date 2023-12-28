@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,9 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.List;
 
+/**
+ * Controller class for handling wealth rating-related RESTful API endpoints.
+ */
 @RestController
 @RequestMapping("/api/v1/wealth-rating")
 @RequiredArgsConstructor
@@ -29,9 +33,15 @@ public class WealthRatingController {
 
     private final WealthRatingService wealthRatingService;
 
+    /**
+     * Endpoint to evaluate the rich status of a person based on their financial information.
+     *
+     * @param person The person to be evaluated.
+     * @return ResponseEntity with the evaluated RichState.
+     */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/check")
-    public ResponseEntity<RichState> evaluateRichStatus(@Validated Person person) {
+    public ResponseEntity<RichState> evaluateRichStatus(@Validated @RequestBody Person person) {
         try {
             RichState richState = wealthRatingService.evaluateRichStatus(person);
 
@@ -53,11 +63,22 @@ public class WealthRatingController {
         }
     }
 
+    /**
+     * Endpoint to retrieve a list of all rich individuals.
+     *
+     * @return ResponseEntity with a list of rich individuals.
+     */
     @GetMapping("/rich/all")
     public ResponseEntity<List<PersonEntity>> getAllRich() {
         return ResponseEntity.ok().body(wealthRatingService.getAllRich());
     }
 
+    /**
+     * Endpoint to retrieve information about a rich individual based on their ID.
+     *
+     * @param id The ID of the rich individual.
+     * @return ResponseEntity with information about the rich individual.
+     */
     @GetMapping("/rich/{id}")
     public ResponseEntity<PersonEntity> getRichById(@PathVariable(value = "id") long id) {
         PersonEntity richPerson = wealthRatingService.getRichById(id);

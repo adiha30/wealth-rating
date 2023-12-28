@@ -1,6 +1,5 @@
 package com.adiha.wealthrating.models.entities;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,8 +11,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+
 import java.math.BigDecimal;
 
+/**
+ * Represents a rich person to be saved in the DB
+ */
 @Entity
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -23,11 +26,25 @@ import java.math.BigDecimal;
 @Getter
 public class PersonEntity {
 
+    /**
+     * Unique identifier for the rich person.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * First name of the rich person.
+     */
     private String firstName;
+
+    /**
+     * Last name of the rich person.
+     */
     private String lastName;
+
+    /**
+     * Fortune of the rich person.
+     */
     private BigDecimal fortune;
 }
