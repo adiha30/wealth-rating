@@ -1,5 +1,8 @@
 package com.adiha.wealthrating.models;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +10,10 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class PersonalInfo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotBlank(message = "First name is mandatory")
     private String firstName;
@@ -16,4 +23,9 @@ public class PersonalInfo {
 
     @NotBlank(message = "City is mandatory")
     private String city;
+
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
