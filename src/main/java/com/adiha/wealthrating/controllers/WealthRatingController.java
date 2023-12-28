@@ -35,13 +35,11 @@ public class WealthRatingController {
         }
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/rich/all")
     public ResponseEntity<String> getAllRich() {
         return ResponseEntity.ok().body("OK");
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/rich/{id}")
     public ResponseEntity<String> getRichById(@PathVariable(value = "id") long id) {
         return ResponseEntity.ok().body("OK");
