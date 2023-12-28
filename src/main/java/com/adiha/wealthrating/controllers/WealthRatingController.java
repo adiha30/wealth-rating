@@ -10,7 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
@@ -25,7 +30,7 @@ public class WealthRatingController {
     private final WealthRatingService wealthRatingService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/check-rich")
+    @PostMapping("/check")
     public ResponseEntity<RichState> evaluateRichStatus(@Validated Person person) {
         try {
             RichState richState = wealthRatingService.evaluateRichStatus(person);
@@ -36,15 +41,15 @@ public class WealthRatingController {
         } catch (HttpClientErrorException.BadRequest e) {
             logger.warn("Person was sent with invalid data, or request was faulty");
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(RichState.NOT_RICH);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             logger.warn("Received a HTTP server error");
 
-            return ResponseEntity.status(e.getStatusCode()).body(RichState.NOT_RICH);
+            return ResponseEntity.status(e.getStatusCode()).build();
         } catch (Exception e) {
             logger.error("Something went wrong, please try again later");
 
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(RichState.NOT_RICH);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -58,8 +63,12 @@ public class WealthRatingController {
         PersonEntity richPerson = wealthRatingService.getRichById(id);
 
         if (richPerson == null) {
+            logger.warn("Person with id {} was not found", id);
+
             return ResponseEntity.notFound().build();
         }
+
+        logger.info("Person with id {} was found", id);
 
         return ResponseEntity.ok().body(richPerson);
     }

@@ -29,26 +29,24 @@ public class WealthRatingService {
     private final RestTemplate restTemplate;
 
     public RichState evaluateRichStatus(Person person) {
-        try {
-            BigDecimal singleAssetEvaluationByCity = getEvaluationByCity(person.getPersonalInfo().getCity());
-            BigDecimal wealthThreshold = getWealthThreshold();
 
-            BigDecimal personFortune = person.calculateFortune(singleAssetEvaluationByCity);
+        BigDecimal singleAssetEvaluationByCity = getEvaluationByCity(person.getPersonalInfo().getCity());
+        BigDecimal wealthThreshold = getWealthThreshold();
 
-            if (personFortune.compareTo(wealthThreshold) >= 0) {
-                savePersonToDB(person, personFortune);
+        BigDecimal personFortune = person.calculateFortune(singleAssetEvaluationByCity);
 
-                logger.info("{} was found rich and saved to DB", person.getPersonalInfo().getFullName());
+        if (personFortune.compareTo(wealthThreshold) >= 0) {
+            savePersonToDB(person, personFortune);
 
-                return RichState.RICH;
-            }
+            logger.info("{} was found rich and saved to DB", person.getPersonalInfo().getFullName());
 
-            logger.info("{} was found not rich", person.getPersonalInfo().getFullName());
-
-            return RichState.NOT_RICH;
-        } catch (Exception e) {
-            return RichState.NOT_RICH;
+            return RichState.RICH;
         }
+
+        logger.info("{} was found not rich", person.getPersonalInfo().getFullName());
+
+        return RichState.NOT_RICH;
+
     }
 
     private void savePersonToDB(Person person, BigDecimal personFortune) {
