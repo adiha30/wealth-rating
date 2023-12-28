@@ -11,10 +11,6 @@ import lombok.Getter;
 @Getter
 public class PersonalInfo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @NotBlank(message = "First name is mandatory")
     private String firstName;
 

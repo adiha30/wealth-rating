@@ -6,9 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -17,6 +15,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Table(name = "richPeople")
 @Builder
+@EqualsAndHashCode
+@Getter
 public class PersonEntity {
 
     @Id
