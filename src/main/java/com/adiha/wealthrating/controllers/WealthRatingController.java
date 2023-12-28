@@ -15,6 +15,7 @@ import org.springframework.web.client.HttpServerErrorException;
 @RequestMapping("/api/v1/wealth-rating")
 @RequiredArgsConstructor
 public class WealthRatingController {
+
     private final WealthRatingService wealthRatingService;
 
     @ResponseStatus(HttpStatus.CREATED)

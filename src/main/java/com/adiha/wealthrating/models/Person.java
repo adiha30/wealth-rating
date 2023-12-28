@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 public class Person {
+
     @Id
     @Positive(message = "Id must be positive")
     private long id;

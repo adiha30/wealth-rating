@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class PersonalInfo {
+
     @NotBlank(message = "First name is mandatory")
     private String firstName;
 

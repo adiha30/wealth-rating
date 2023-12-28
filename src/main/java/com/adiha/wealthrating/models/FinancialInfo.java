@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 public class FinancialInfo {
+
     @NotNull(message = "Cash cannot be null")
     private BigDecimal cash;
 
